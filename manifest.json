@@ -1,0 +1,21 @@
+{
+  "name": "Budget Planner C-ACE",
+  "short_name": "Budget",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "icons": [{
+    "src": "/icons/favicon.ico",
+    "sizes": "48x48",
+    "type": "image/png"
+  }, {
+    "src": "/icons/icon-512.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }],
+  
+  "scope": "/",
+  "background_color": "white",
+  "theme_color": "white"
+  
+}
+
