@@ -1,9 +1,9 @@
 const CACHE_NAME = 'budget-planner-v3'; 
 const FILES_TO_CACHE = [
-  'BUDGETPLN/icons/favicon.ico',
-  'BUDGETPLN/index.html',
-  'BUDGETPLN/app.js',
-  'BUDGETPLN/style.css'
+  '/icons/favicon.ico',
+  '/index.html',
+  '/app.js',
+  '/style.css'
 ];
 
 // Install event: cache necessary files
