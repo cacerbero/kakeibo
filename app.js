@@ -1,18 +1,18 @@
 import { initializeApp } from 'firebase/app';
-import { doc, getDocs, addDoc, updateDoc, getFirestore, collection } from "firebase/firestore";
+import { doc, getDocs, addDoc, updateDoc, deleteDoc, getFirestore, collection } from "firebase/firestore";
 
-//Adding the service worker in app.js to work with parcel
-const sw = new URL('service-worker.js', import.meta.url)
+// Adding the service worker in app.js to work with parcel
+const sw = new URL('service-worker.js', import.meta.url);
 if ('serviceWorker' in navigator) {
     const s = navigator.serviceWorker;
     s.register(sw.href, {
         scope: '/CheckList/'
     })
-        .then(_ => console.log('Service Worker Registered for scope:', sw.href, 'with', import.meta.url))
-        .catch(err => console.error('Service Worker Error:', err));
+    .then(_ => console.log('Service Worker Registered for scope:', sw.href, 'with', import.meta.url))
+    .catch(err => console.error('Service Worker Error:', err));
 }
 
-// Firebase Config 
+// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyByPS96EKSywMMB_BF0MDOEbshjiP8TOug",
   authDomain: "kakeibo-dd1e0.firebaseapp.com",
@@ -25,20 +25,24 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-//START POINT FROM PREVIOUS APP.JS WKING WITH LOCAL STORAGE
 let bdg = {
-  data: null, 
-  hBal: null, 
-  hInc: null, 
-  hExp: null, 
-  hList: null, 
-  hIncomeForm: null, 
-  hExpenseForm: null, 
-  fIncomeID: null, fIncomeSource: null, fIncomeAmt: null,
-  fExpenseID: null, fExpenseTxt: null, fExpenseAmt: null, fExpenseCategory: null,
+  data: null,
+  hBal: null,
+  hInc: null,
+  hExp: null,
+  hList: null,
+  hIncomeForm: null,
+  hExpenseForm: null,
+  fIncomeID: null, 
+  fIncomeSource: null, 
+  fIncomeAmt: null,
+  fExpenseID: null, 
+  fExpenseTxt: null, 
+  fExpenseAmt: null, 
+  fExpenseCategory: null,
   selectedMonth: null,
-  
-  init: () => {
+
+  init: async () => {
     bdg.hBal = document.getElementById("balanceAm");
     bdg.hInc = document.getElementById("incomeAm");
     bdg.hExp = document.getElementById("expenseAm");
@@ -53,17 +57,13 @@ let bdg = {
     bdg.fExpenseAmt = document.getElementById("expenseFormAmt");
     bdg.fExpenseCategory = document.getElementById("expenseFormCategory");
 
-    bdg.entries = localStorage.getItem("entries");
-    if (bdg.entries == null) {
-      bdg.entries = [];
-    } else {
-      bdg.entries = JSON.parse(bdg.entries);
-    }
+    const querySnapshot = await getDocs(collection(db, "entries"));
+    bdg.entries = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
 
     const monthSelect = document.getElementById("monthSelect");
     const currentDate = new Date();
     const currentMonth = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
-    
+
     const months = [];
     for (let i = 0; i < 12; i++) {
       const month = new Date(currentDate.getFullYear(), i);
@@ -161,7 +161,7 @@ let bdg = {
     bdg.hExp.innerHTML = `$${exp.toFixed(2)}`;
   },
 
-  saveIncome: () => {
+  saveIncome: async () => {
     let data = {
       s: "+",
       t: "",
@@ -172,18 +172,18 @@ let bdg = {
     };
 
     if (bdg.fIncomeID.value == "") {
-      bdg.entries.push(data);
+      await addDoc(collection(db, "entries"), data);
     } else {
-      bdg.entries[parseInt(bdg.fIncomeID.value)] = data;
+      const entryRef = doc(db, "entries", bdg.fIncomeID.value);
+      await updateDoc(entryRef, data);
     }
-    localStorage.setItem("entries", JSON.stringify(bdg.entries));
 
     bdg.toggleIncome(false);
     bdg.draw();
     return false;
   },
 
-  saveExpense: () => {
+  saveExpense: async () => {
     let data = {
       s: "-",
       t: bdg.fExpenseTxt.value,
@@ -194,21 +194,22 @@ let bdg = {
     };
 
     if (bdg.fExpenseID.value == "") {
-      bdg.entries.push(data);
+      await addDoc(collection(db, "entries"), data);
     } else {
-      bdg.entries[parseInt(bdg.fExpenseID.value)] = data;
+      const entryRef = doc(db, "entries", bdg.fExpenseID.value);
+      await updateDoc(entryRef, data);
     }
-    localStorage.setItem("entries", JSON.stringify(bdg.entries));
 
     bdg.toggleExpense(false);
     bdg.draw();
     return false;
   },
 
-  del: id => {
+  del: async id => {
     if (confirm("Delete entry?")) {
+      const entryRef = doc(db, "entries", bdg.entries[id].id);
+      await deleteDoc(entryRef);
       bdg.entries.splice(id, 1);
-      localStorage.setItem("entries", JSON.stringify(bdg.entries));
       bdg.draw();
     }
   }
