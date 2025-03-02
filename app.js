@@ -1,3 +1,31 @@
+import { initializeApp } from 'firebase/app';
+import { doc, getDocs, addDoc, updateDoc, getFirestore, collection } from "firebase/firestore";
+
+//Adding the service worker in app.js to work with parcel
+const sw = new URL('service-worker.js', import.meta.url)
+if ('serviceWorker' in navigator) {
+    const s = navigator.serviceWorker;
+    s.register(sw.href, {
+        scope: '/CheckList/'
+    })
+        .then(_ => console.log('Service Worker Registered for scope:', sw.href, 'with', import.meta.url))
+        .catch(err => console.error('Service Worker Error:', err));
+}
+
+// Firebase Config 
+const firebaseConfig = {
+  apiKey: "AIzaSyByPS96EKSywMMB_BF0MDOEbshjiP8TOug",
+  authDomain: "kakeibo-dd1e0.firebaseapp.com",
+  projectId: "kakeibo-dd1e0",
+  storageBucket: "kakeibo-dd1e0.firebasestorage.app",
+  messagingSenderId: "1002490623760",
+  appId: "1:1002490623760:web:c9b163d5a02143ec30d795"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+//START POINT FROM PREVIOUS APP.JS WKING WITH LOCAL STORAGE
 let bdg = {
   data: null, 
   hBal: null, 
