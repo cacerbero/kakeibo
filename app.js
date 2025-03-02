@@ -1,218 +1,221 @@
-import { initializeApp } from 'firebase/app';
-import { doc, getDocs, addDoc, updateDoc, deleteDoc, getFirestore, collection } from "firebase/firestore";
+// import { initializeApp } from 'firebase/app';
+// import { doc, getDocs, addDoc, updateDoc, deleteDoc, getFirestore, collection } from "firebase/firestore";
 
-// Adding the service worker in app.js to work with parcel
+// Registrar el service worker
 const sw = new URL('service-worker.js', import.meta.url);
 if ('serviceWorker' in navigator) {
     const s = navigator.serviceWorker;
     s.register(sw.href, {
-        scope: '/CheckList/'
+        scope: '/kakeibo/'
     })
     .then(_ => console.log('Service Worker Registered for scope:', sw.href, 'with', import.meta.url))
     .catch(err => console.error('Service Worker Error:', err));
 }
 
-// Firebase Config
-const firebaseConfig = {
-  apiKey: "AIzaSyByPS96EKSywMMB_BF0MDOEbshjiP8TOug",
-  authDomain: "kakeibo-dd1e0.firebaseapp.com",
-  projectId: "kakeibo-dd1e0",
-  storageBucket: "kakeibo-dd1e0.firebasestorage.app",
-  messagingSenderId: "1002490623760",
-  appId: "1:1002490623760:web:c9b163d5a02143ec30d795"
-};
+// // Configuración de Firebase
+// const firebaseConfig = {
+//   apiKey: "AIzaSyByPS96EKSywMMB_BF0MDOEbshjiP8TOug",
+//   authDomain: "kakeibo-dd1e0.firebaseapp.com",
+//   projectId: "kakeibo-dd1e0",
+//   storageBucket: "kakeibo-dd1e0.firebasestorage.app",
+//   messagingSenderId: "1002490623760",
+//   appId: "1:1002490623760:web:c9b163d5a02143ec30d795"
+// };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+// const app = initializeApp(firebaseConfig);
+// const db = getFirestore(app);
 
-let bdg = {
-  data: null,
-  hBal: null,
-  hInc: null,
-  hExp: null,
-  hList: null,
-  hIncomeForm: null,
-  hExpenseForm: null,
-  fIncomeID: null, 
-  fIncomeSource: null, 
-  fIncomeAmt: null,
-  fExpenseID: null, 
-  fExpenseTxt: null, 
-  fExpenseAmt: null, 
-  fExpenseCategory: null,
-  selectedMonth: null,
+// let bdg = {
+//   data: null,
+//   hBal: null,
+//   hInc: null,
+//   hExp: null,
+//   hList: null,
+//   hIncomeForm: null,
+//   hExpenseForm: null,
+//   fIncomeID: null, 
+//   fIncomeSource: null, 
+//   fIncomeAmt: null,
+//   fExpenseID: null, 
+//   fExpenseTxt: null, 
+//   fExpenseAmt: null, 
+//   fExpenseCategory: null,
+//   selectedMonth: null,
 
-  init: async () => {
-    bdg.hBal = document.getElementById("balanceAm");
-    bdg.hInc = document.getElementById("incomeAm");
-    bdg.hExp = document.getElementById("expenseAm");
-    bdg.hList = document.getElementById("list");
-    bdg.hIncomeForm = document.getElementById("incomeForm");
-    bdg.hExpenseForm = document.getElementById("expenseForm");
-    bdg.fIncomeID = document.getElementById("incomeFormID");
-    bdg.fIncomeSource = document.getElementById("incomeFormSource");
-    bdg.fIncomeAmt = document.getElementById("incomeFormAmt");
-    bdg.fExpenseID = document.getElementById("expenseFormID");
-    bdg.fExpenseTxt = document.getElementById("expenseFormTxt");
-    bdg.fExpenseAmt = document.getElementById("expenseFormAmt");
-    bdg.fExpenseCategory = document.getElementById("expenseFormCategory");
+//   init: async () => {
+//     // Referencias a los elementos HTML
+//     bdg.hBal = document.getElementById("balanceAm");
+//     bdg.hInc = document.getElementById("incomeAm");
+//     bdg.hExp = document.getElementById("expenseAm");
+//     bdg.hList = document.getElementById("list");
+//     bdg.hIncomeForm = document.getElementById("incomeForm");
+//     bdg.hExpenseForm = document.getElementById("expenseForm");
+//     bdg.fIncomeID = document.getElementById("incomeFormID");
+//     bdg.fIncomeSource = document.getElementById("incomeFormSource");
+//     bdg.fIncomeAmt = document.getElementById("incomeFormAmt");
+//     bdg.fExpenseID = document.getElementById("expenseFormID");
+//     bdg.fExpenseTxt = document.getElementById("expenseFormTxt");
+//     bdg.fExpenseAmt = document.getElementById("expenseFormAmt");
+//     bdg.fExpenseCategory = document.getElementById("expenseFormCategory");
 
-    const querySnapshot = await getDocs(collection(db, "entries"));
-    bdg.entries = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+//     // Obtener datos de Firestore
+//     const querySnapshot = await getDocs(collection(db, "entries"));
+//     bdg.entries = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
 
-    const monthSelect = document.getElementById("monthSelect");
-    const currentDate = new Date();
-    const currentMonth = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+//     // Población del selector de meses
+//     const monthSelect = document.getElementById("monthSelect");
+//     const currentDate = new Date();
+//     const currentMonth = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
 
-    const months = [];
-    for (let i = 0; i < 12; i++) {
-      const month = new Date(currentDate.getFullYear(), i);
-      const monthString = month.toLocaleString('default', { month: 'long', year: 'numeric' });
-      months.push(monthString);
-    }
+//     const months = [];
+//     for (let i = 0; i < 12; i++) {
+//       const month = new Date(currentDate.getFullYear(), i);
+//       const monthString = month.toLocaleString('default', { month: 'long', year: 'numeric' });
+//       months.push(monthString);
+//     }
 
-    monthSelect.innerHTML = '';
-    months.forEach(month => {
-      const option = document.createElement('option');
-      option.value = month;
-      option.textContent = month;
-      monthSelect.appendChild(option);
-    });
+//     monthSelect.innerHTML = '';
+//     months.forEach(month => {
+//       const option = document.createElement('option');
+//       option.value = month;
+//       option.textContent = month;
+//       monthSelect.appendChild(option);
+//     });
 
-    monthSelect.value = currentMonth;
-    bdg.selectedMonth = currentMonth;
+//     monthSelect.value = currentMonth;
+//     bdg.selectedMonth = currentMonth;
 
-    monthSelect.addEventListener("change", (e) => {
-      bdg.selectedMonth = e.target.value;
-      bdg.draw(); 
-    });
+//     monthSelect.addEventListener("change", (e) => {
+//       bdg.selectedMonth = e.target.value;
+//       bdg.draw(); 
+//     });
 
-    bdg.draw();
+//     bdg.draw();
 
-    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-      console.log("Service Worker is controlling the page");
-    }
-  },
+//     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+//       console.log("Service Worker is controlling the page");
+//     }
+//   },
 
-  toggleIncome: id => {
-    console.log("Toggle income function called with id:", id);
-    if (id === false) {
-      bdg.fIncomeID.value = "";
-      bdg.fIncomeSource.value = "";
-      bdg.fIncomeAmt.value = "";
-      bdg.hIncomeForm.classList.add("hidden");
-    } else {
-      if (Number.isInteger(id)) {
-        bdg.fIncomeID.value = id;
-        bdg.fIncomeSource.value = bdg.entries[id].source;
-        bdg.fIncomeAmt.value = bdg.entries[id].a;
-      }
-      bdg.hIncomeForm.classList.remove("hidden");
-    }
-  },
+//   toggleIncome: id => {
+//     console.log("Toggle income function called with id:", id);
+//     if (id === false) {
+//       bdg.fIncomeID.value = "";
+//       bdg.fIncomeSource.value = "";
+//       bdg.fIncomeAmt.value = "";
+//       bdg.hIncomeForm.classList.add("hidden");
+//     } else {
+//       if (Number.isInteger(id)) {
+//         bdg.fIncomeID.value = id;
+//         bdg.fIncomeSource.value = bdg.entries[id].source;
+//         bdg.fIncomeAmt.value = bdg.entries[id].a;
+//       }
+//       bdg.hIncomeForm.classList.remove("hidden");
+//     }
+//   },
 
-  toggleExpense: id => {
-    console.log("Toggle expense function called with id:", id);
-    if (id === false) {
-      bdg.fExpenseID.value = "";
-      bdg.fExpenseTxt.value = "";
-      bdg.fExpenseAmt.value = "";
-      bdg.fExpenseCategory.value = "needs";
-      bdg.hExpenseForm.classList.add("hidden");
-    } else {
-      if (Number.isInteger(id)) {
-        bdg.fExpenseID.value = id;
-        bdg.fExpenseTxt.value = bdg.entries[id].t;
-        bdg.fExpenseAmt.value = bdg.entries[id].a;
-        bdg.fExpenseCategory.value = bdg.entries[id].c;
-      }
-      bdg.hExpenseForm.classList.remove("hidden");
-    }
-  },
+//   toggleExpense: id => {
+//     console.log("Toggle expense function called with id:", id);
+//     if (id === false) {
+//       bdg.fExpenseID.value = "";
+//       bdg.fExpenseTxt.value = "";
+//       bdg.fExpenseAmt.value = "";
+//       bdg.fExpenseCategory.value = "needs";
+//       bdg.hExpenseForm.classList.add("hidden");
+//     } else {
+//       if (Number.isInteger(id)) {
+//         bdg.fExpenseID.value = id;
+//         bdg.fExpenseTxt.value = bdg.entries[id].t;
+//         bdg.fExpenseAmt.value = bdg.entries[id].a;
+//         bdg.fExpenseCategory.value = bdg.entries[id].c;
+//       }
+//       bdg.hExpenseForm.classList.remove("hidden");
+//     }
+//   },
 
-  draw: () => {
-    let bal = 0, inc = 0, exp = 0, row;
+//   draw: () => {
+//     let bal = 0, inc = 0, exp = 0, row;
 
-    bdg.hList.innerHTML = "";
-    bdg.entries.forEach((entry, i) => {
-      const entryDate = new Date(entry.date);
-      const entryMonth = entryDate.toLocaleString('default', { month: 'long', year: 'numeric' });
-      if (entryMonth === bdg.selectedMonth) {
-        if (entry.s == "+") {
-          inc += entry.a;
-          bal += entry.a;
-        } else {
-          exp += entry.a;
-          bal -= entry.a;
-        }
-        row = document.createElement("div");
-        row.className = `entry ${entry.s == "+" ? "income" : "expense"}`;
-        row.innerHTML = `<div class="eDel" onclick="bdg.del(${i})">X</div>
-        <div class="eTxt">${entry.t || entry.source}</div>
-        <div class="eCat">${entry.c || ""}</div>
-        <div class="eAmt">$${parseFloat(entry.a).toFixed(2)}</div>
-        <div class="eEdit" onclick="bdg.toggle(${i})">&#9998;</div>`;
-        bdg.hList.appendChild(row);
-      }
-    });
+//     bdg.hList.innerHTML = "";
+//     bdg.entries.forEach((entry, i) => {
+//       const entryDate = new Date(entry.date);
+//       const entryMonth = entryDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+//       if (entryMonth === bdg.selectedMonth) {
+//         if (entry.s == "+") {
+//           inc += entry.a;
+//           bal += entry.a;
+//         } else {
+//           exp += entry.a;
+//           bal -= entry.a;
+//         }
+//         row = document.createElement("div");
+//         row.className = `entry ${entry.s == "+" ? "income" : "expense"}`;
+//         row.innerHTML = `<div class="eDel" onclick="bdg.del(${i})">X</div>
+//         <div class="eTxt">${entry.t || entry.source}</div>
+//         <div class="eCat">${entry.c || ""}</div>
+//         <div class="eAmt">$${parseFloat(entry.a).toFixed(2)}</div>
+//         <div class="eEdit" onclick="bdg.toggle(${i})">&#9998;</div>`;
+//         bdg.hList.appendChild(row);
+//       }
+//     });
 
-    bdg.hBal.innerHTML = bal < 0 ? `-$${Math.abs(bal).toFixed(2)}` : `$${bal.toFixed(2)}`;
-    bdg.hInc.innerHTML = `$${inc.toFixed(2)}`;
-    bdg.hExp.innerHTML = `$${exp.toFixed(2)}`;
-  },
+//     bdg.hBal.innerHTML = bal < 0 ? `-$${Math.abs(bal).toFixed(2)}` : `$${bal.toFixed(2)}`;
+//     bdg.hInc.innerHTML = `$${inc.toFixed(2)}`;
+//     bdg.hExp.innerHTML = `$${exp.toFixed(2)}`;
+//   },
 
-  saveIncome: async () => {
-    let data = {
-      s: "+",
-      t: "",
-      a: parseFloat(bdg.fIncomeAmt.value),
-      c: "",
-      source: bdg.fIncomeSource.value,
-      date: new Date().toISOString()
-    };
+//   saveIncome: async () => {
+//     let data = {
+//       s: "+",
+//       t: "",
+//       a: parseFloat(bdg.fIncomeAmt.value),
+//       c: "",
+//       source: bdg.fIncomeSource.value,
+//       date: new Date().toISOString()
+//     };
 
-    if (bdg.fIncomeID.value == "") {
-      await addDoc(collection(db, "entries"), data);
-    } else {
-      const entryRef = doc(db, "entries", bdg.fIncomeID.value);
-      await updateDoc(entryRef, data);
-    }
+//     if (bdg.fIncomeID.value == "") {
+//       await addDoc(collection(db, "entries"), data);
+//     } else {
+//       const entryRef = doc(db, "entries", bdg.fIncomeID.value);
+//       await updateDoc(entryRef, data);
+//     }
 
-    bdg.toggleIncome(false);
-    bdg.draw();
-    return false;
-  },
+//     bdg.toggleIncome(false);
+//     bdg.draw();
+//     return false;
+//   },
 
-  saveExpense: async () => {
-    let data = {
-      s: "-",
-      t: bdg.fExpenseTxt.value,
-      a: parseFloat(bdg.fExpenseAmt.value),
-      c: bdg.fExpenseCategory.value,
-      source: "",
-      date: new Date().toISOString()
-    };
+//   saveExpense: async () => {
+//     let data = {
+//       s: "-",
+//       t: bdg.fExpenseTxt.value,
+//       a: parseFloat(bdg.fExpenseAmt.value),
+//       c: bdg.fExpenseCategory.value,
+//       source: "",
+//       date: new Date().toISOString()
+//     };
 
-    if (bdg.fExpenseID.value == "") {
-      await addDoc(collection(db, "entries"), data);
-    } else {
-      const entryRef = doc(db, "entries", bdg.fExpenseID.value);
-      await updateDoc(entryRef, data);
-    }
+//     if (bdg.fExpenseID.value == "") {
+//       await addDoc(collection(db, "entries"), data);
+//     } else {
+//       const entryRef = doc(db, "entries", bdg.fExpenseID.value);
+//       await updateDoc(entryRef, data);
+//     }
 
-    bdg.toggleExpense(false);
-    bdg.draw();
-    return false;
-  },
+//     bdg.toggleExpense(false);
+//     bdg.draw();
+//     return false;
+//   },
 
-  del: async id => {
-    if (confirm("Delete entry?")) {
-      const entryRef = doc(db, "entries", bdg.entries[id].id);
-      await deleteDoc(entryRef);
-      bdg.entries.splice(id, 1);
-      bdg.draw();
-    }
-  }
-};
+//   del: async id => {
+//     if (confirm("Delete entry?")) {
+//       const entryRef = doc(db, "entries", bdg.entries[id].id);
+//       await deleteDoc(entryRef);
+//       bdg.entries.splice(id, 1);
+//       bdg.draw();
+//     }
+//   }
+// };
 
-window.onload = bdg.init;
+// window.onload = bdg.init
