@@ -53,35 +53,44 @@ gtag('config', 'G-CBX7MYS8PL');
       <div id="list"></div>
     </div>
 
+    <!-- Income Section -->
     <div class="entry-card">
-      <button id="newIncomeBtn" onclick="bdg.toggleIncome(true)" aria-label="Create a new income">New Income</button>
+      <button id="newIncomeBtn" aria-label="Create a new income" aria-expanded="false">New Income</button>
       <div id="listIncome"></div>
-      <section id="incomeForm" aria-labelledby="incomeFormTitle" class="hidden">
+
+      <section id="incomeForm" class="hidden" aria-labelledby="incomeFormTitle">
         <h2 id="incomeFormTitle">Income Form</h2>
-        <form onsubmit="return bdg.saveIncome()">
-          <button id="incomeFormEnd" onclick="bdg.toggleIncome(false)" aria-label="Close Form">X</button>
+        <form id="incomeFormElem" aria-labelledby="incomeFormTitle" aria-describedby="incomeFormDesc">
+          <button id="incomeFormEnd" aria-label="Close Form" type="button">X</button>
           <input type="hidden" id="incomeFormID">
           <label for="incomeFormSource">Income Source</label>
           <input type="text" id="incomeFormSource" aria-label="Income Source" required="">
+          
           <label for="incomeFormAmt">Amount</label>
           <input type="number" id="incomeFormAmt" step="0.01" required="">
+
           <button type="submit" id="incomeFormGo" aria-label="Save Income">Save</button>
         </form>
       </section>
     </div>
 
+    <!-- Expense Section -->
     <div class="entry-card">
-      <button id="newExpenseBtn" onclick="bdg.toggleExpense(true)" aria-label="Create a new expense">New Expense</button>
+      <button id="newExpenseBtn" aria-label="Create a new expense" aria-expanded="false">New Expense</button>
       <div id="listExpense"></div>
-      <section id="expenseForm" aria-labelledby="expenseFormTitle" class="hidden">
+
+      <section id="expenseForm" class="hidden" aria-labelledby="expenseFormTitle">
         <h2 id="expenseFormTitle">Expense Form</h2>
-        <form onsubmit="return bdg.saveExpense()">
-          <button id="expenseFormEnd" onclick="bdg.toggleExpense(false)" aria-label="Close Form">X</button>
+        <form id="expenseFormElem" aria-labelledby="expenseFormTitle" aria-describedby="expenseFormDesc">
+          <button id="expenseFormEnd" aria-label="Close Form" type="button">X</button>
           <input type="hidden" id="expenseFormID">
+          
           <label for="expenseFormTxt">Description</label>
           <input type="text" id="expenseFormTxt" required="">
+          
           <label for="expenseFormAmt">Amount</label>
           <input type="number" id="expenseFormAmt" step="0.01" required="">
+          
           <label for="expenseFormCategory">Category</label>
           <select id="expenseFormCategory" required="">
             <option value="needs">Needs</option>
@@ -89,11 +98,13 @@ gtag('config', 'G-CBX7MYS8PL');
             <option value="culture">Culture</option>
             <option value="unexpected">Unexpected</option>
           </select>
+
           <button type="submit" id="expenseFormGo" aria-label="Save Expense">Save</button>
         </form>
       </section>
     </div>
   </section>
+
   <script src="/index.5baa4167.js" defer=""></script>
 </body>
 </html>
