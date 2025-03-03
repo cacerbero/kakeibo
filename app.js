@@ -14,6 +14,8 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+console.log("Firebase initialized:", app.name);
+console.log("Firestore instance:", db);
 
 let bdg = {
   data: null,
@@ -33,6 +35,7 @@ let bdg = {
   selectedMonth: null,
 
   init: () => {
+    console.log("Initialization started");
     bdg.hBal = document.getElementById("balanceAm");
     bdg.hInc = document.getElementById("incomeAm");
     bdg.hExp = document.getElementById("expenseAm");
@@ -75,7 +78,7 @@ let bdg = {
       bdg.draw(); 
     });
 
-    bdg.draw();  // Draw entries for the selected month
+    bdg.draw();  
   },
 
   toggleIncome: (id) => {
@@ -122,7 +125,7 @@ let bdg = {
 
     querySnapshot.forEach((doc) => {
       const entry = doc.data();
-      entry.id = doc.id;  // Add document ID to entry
+      entry.id = doc.id;  
 
       const entryDate = new Date(entry.date);
       const entryMonth = entryDate.toLocaleString('default', { month: 'long', year: 'numeric' });
@@ -153,9 +156,11 @@ let bdg = {
   },
 
   saveIncome: async () => {
+    let msg = "testing";
+    console.log(msg);
     let data = {
       s: "+",  // Income
-      t: "",  // No description
+      t: "",  
       a: parseFloat(bdg.fIncomeAmt.value),
       c: "",
       source: bdg.fIncomeSource.value,
@@ -166,10 +171,12 @@ let bdg = {
       if (bdg.fIncomeID.value === "") {
         // Add new income entry
         await addDoc(collection(db, "entries"), data);
+        console.log("Income added:", data);
       } else {
         // Update existing income entry
         const incomeDocRef = doc(db, "entries", bdg.fIncomeID.value);
         await updateDoc(incomeDocRef, data);
+        console.log("Income updated:", data);
       }
 
       bdg.toggleIncome(false);

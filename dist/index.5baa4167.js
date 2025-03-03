@@ -610,6 +610,8 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = (0, _app.initializeApp)(firebaseConfig);
 const db = (0, _firestore.getFirestore)(app);
+console.log("Firebase initialized:", app.name);
+console.log("Firestore instance:", db);
 let bdg = {
     data: null,
     hBal: null,
@@ -627,6 +629,7 @@ let bdg = {
     fExpenseCategory: null,
     selectedMonth: null,
     init: ()=>{
+        console.log("Initialization started");
         bdg.hBal = document.getElementById("balanceAm");
         bdg.hInc = document.getElementById("incomeAm");
         bdg.hExp = document.getElementById("expenseAm");
@@ -669,7 +672,7 @@ let bdg = {
             bdg.selectedMonth = e.target.value;
             bdg.draw();
         });
-        bdg.draw(); // Draw entries for the selected month
+        bdg.draw();
     },
     toggleIncome: (id)=>{
         console.log("Toggle income function called with id:", id);
@@ -711,7 +714,7 @@ let bdg = {
         bdg.hList.innerHTML = "";
         querySnapshot.forEach((doc)=>{
             const entry = doc.data();
-            entry.id = doc.id; // Add document ID to entry
+            entry.id = doc.id;
             const entryDate = new Date(entry.date);
             const entryMonth = entryDate.toLocaleString('default', {
                 month: 'long',
@@ -740,6 +743,8 @@ let bdg = {
         bdg.hExp.innerHTML = `$${exp.toFixed(2)}`;
     },
     saveIncome: async ()=>{
+        let msg = "testing";
+        console.log(msg);
         let data = {
             s: "+",
             t: "",
@@ -750,12 +755,15 @@ let bdg = {
         };
         console.log("Data to send to Firestore:", data);
         try {
-            if (bdg.fIncomeID.value === "") // Add new income entry
-            await (0, _firestore.addDoc)((0, _firestore.collection)(db, "entries"), data);
-            else {
+            if (bdg.fIncomeID.value === "") {
+                // Add new income entry
+                await (0, _firestore.addDoc)((0, _firestore.collection)(db, "entries"), data);
+                console.log("Income added:", data);
+            } else {
                 // Update existing income entry
                 const incomeDocRef = (0, _firestore.doc)(db, "entries", bdg.fIncomeID.value);
                 await (0, _firestore.updateDoc)(incomeDocRef, data);
+                console.log("Income updated:", data);
             }
             bdg.toggleIncome(false);
             bdg.draw();
