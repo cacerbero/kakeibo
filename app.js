@@ -223,4 +223,13 @@ let bdg = {
   }
 };
 
+console.log("JavaScript is working!");  // This checks if the script is loaded
+
+// You can place this code wherever you are attaching event listeners
+document.getElementById("newIncomeBtn").addEventListener("click", function() {
+  console.log("New Income Button Clicked!");  // This checks if the button click is working
+  // You can call your bdg.toggleIncome(true) here if needed
+});
+
+
 window.onload = bdg.init;
