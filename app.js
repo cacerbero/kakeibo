@@ -1,3 +1,20 @@
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, deleteDoc } from "firebase/firestore";
+
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "your-api-key",
+  authDomain: "your-auth-domain",
+  projectId: "your-project-id",
+  storageBucket: "your-storage-bucket",
+  messagingSenderId: "your-messaging-sender-id",
+  appId: "your-app-id"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 let bdg = {
   data: null,
   hBal: null,
@@ -14,7 +31,6 @@ let bdg = {
   fExpenseAmt: null,
   fExpenseCategory: null,
   selectedMonth: null,
-  entries: [],  // Change here: in-memory data, no longer using localStorage
 
   init: () => {
     bdg.hBal = document.getElementById("balanceAm");
@@ -31,7 +47,7 @@ let bdg = {
     bdg.fExpenseAmt = document.getElementById("expenseFormAmt");
     bdg.fExpenseCategory = document.getElementById("expenseFormCategory");
 
-    // Use current month logic from previous solution
+    // Current month logic
     const monthSelect = document.getElementById("monthSelect");
     const currentDate = new Date();
     const currentMonth = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
@@ -98,13 +114,19 @@ let bdg = {
     }
   },
 
-  draw: () => {
+  draw: async () => {
     let bal = 0, inc = 0, exp = 0, row;
-
+    const querySnapshot = await getDocs(collection(db, "entries"));
+    
     bdg.hList.innerHTML = "";
-    bdg.entries.forEach((entry, i) => {
+
+    querySnapshot.forEach((doc) => {
+      const entry = doc.data();
+      entry.id = doc.id;  // Add document ID to entry
+
       const entryDate = new Date(entry.date);
       const entryMonth = entryDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+
       if (entryMonth === bdg.selectedMonth) {
         if (entry.s == "+") {
           inc += entry.a;
@@ -113,13 +135,14 @@ let bdg = {
           exp += entry.a;
           bal -= entry.a;
         }
+
         row = document.createElement("div");
         row.className = `entry ${entry.s == "+" ? "income" : "expense"}`;
-        row.innerHTML = `<div class="eDel" onclick="bdg.del(${i})">X</div>
+        row.innerHTML = `<div class="eDel" onclick="bdg.del('${entry.id}')">X</div>
         <div class="eTxt">${entry.t || entry.source}</div>
         <div class="eCat">${entry.c || ""}</div>
         <div class="eAmt">$${parseFloat(entry.a).toFixed(2)}</div>
-        <div class="eEdit" onclick="bdg.toggle(${i})">&#9998;</div>`;
+        <div class="eEdit" onclick="bdg.toggle('${entry.id}')">&#9998;</div>`;
         bdg.hList.appendChild(row);
       }
     });
@@ -129,52 +152,73 @@ let bdg = {
     bdg.hExp.innerHTML = `$${exp.toFixed(2)}`;
   },
 
-  saveIncome: () => {
+  saveIncome: async () => {
     let data = {
-      s: "+",
-      t: "",  // Income doesn't have a description, so it's left empty
+      s: "+",  // Income
+      t: "",  // No description
       a: parseFloat(bdg.fIncomeAmt.value),
       c: "",
       source: bdg.fIncomeSource.value,
-      date: new Date().toISOString()
+      date: new Date().toISOString(),
     };
 
-    if (bdg.fIncomeID.value == "") {
-      bdg.entries.push(data);  // Add new income entry
-    } else {
-      bdg.entries[parseInt(bdg.fIncomeID.value)] = data;  // Update existing income entry
+    try {
+      if (bdg.fIncomeID.value === "") {
+        // Add new income entry
+        await addDoc(collection(db, "entries"), data);
+      } else {
+        // Update existing income entry
+        const incomeDocRef = doc(db, "entries", bdg.fIncomeID.value);
+        await updateDoc(incomeDocRef, data);
+      }
+
+      bdg.toggleIncome(false);
+      bdg.draw();
+    } catch (e) {
+      console.error("Error saving income: ", e);
     }
 
-    bdg.toggleIncome(false);
-    bdg.draw();
     return false;
   },
 
-  saveExpense: () => {
+  saveExpense: async () => {
     let data = {
-      s: "-",
-      t: bdg.fExpenseTxt.value,  // Description for the expense
+      s: "-",  // Expense
+      t: bdg.fExpenseTxt.value,
       a: parseFloat(bdg.fExpenseAmt.value),
-      c: bdg.fExpenseCategory.value,  // Category for the expense
+      c: bdg.fExpenseCategory.value,
       source: "",
-      date: new Date().toISOString()
+      date: new Date().toISOString(),
     };
 
-    if (bdg.fExpenseID.value == "") {
-      bdg.entries.push(data);  // Add new expense entry
-    } else {
-      bdg.entries[parseInt(bdg.fExpenseID.value)] = data;  // Update existing expense entry
+    try {
+      if (bdg.fExpenseID.value === "") {
+        // Add new expense entry
+        await addDoc(collection(db, "entries"), data);
+      } else {
+        // Update existing expense entry
+        const expenseDocRef = doc(db, "entries", bdg.fExpenseID.value);
+        await updateDoc(expenseDocRef, data);
+      }
+
+      bdg.toggleExpense(false);
+      bdg.draw();
+    } catch (e) {
+      console.error("Error saving expense: ", e);
     }
 
-    bdg.toggleExpense(false);
-    bdg.draw();
     return false;
   },
 
-  del: (id) => {
+  del: async (id) => {
     if (confirm("Delete entry?")) {
-      bdg.entries.splice(id, 1);  // Delete the entry from the in-memory list
-      bdg.draw();  // Redraw the updated list
+      try {
+        const entryDocRef = doc(db, "entries", id);
+        await deleteDoc(entryDocRef);
+        bdg.draw();
+      } catch (e) {
+        console.error("Error deleting entry: ", e);
+      }
     }
   }
 };
