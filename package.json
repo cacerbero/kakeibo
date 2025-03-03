@@ -13,7 +13,7 @@
   "license": "ISC",
   "author": "",
   "type": "module",
-  "main": "app.js",
+ 
   "scripts": {
     "start": "parcel index.html",
     "build": "parcel build --dist-dir docs --public-url /kakeibo/ index.html",
