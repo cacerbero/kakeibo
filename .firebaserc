@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "kakeibo-dd1e0"
-  }
+    "default": "kakeibo-dd1e0",
+    "kakeibo": "kakeibo-dd1e0"
+  },
+  "targets": {},
+  "etags": {}
 }
