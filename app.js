@@ -1,5 +1,5 @@
-// import { initializeApp } from 'firebase/app';
-// import { doc, getDocs, addDoc, updateDoc, deleteDoc, getFirestore, collection } from "firebase/firestore";
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, doc, getDocs, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 
 // Registrar el service worker
 const sw = new URL('service-worker.js', import.meta.url);
@@ -12,18 +12,21 @@ if ('serviceWorker' in navigator) {
     .catch(err => console.error('Service Worker Error:', err));
 }
 
-// // Configuración de Firebase
-// const firebaseConfig = {
-//   apiKey: "AIzaSyByPS96EKSywMMB_BF0MDOEbshjiP8TOug",
-//   authDomain: "kakeibo-dd1e0.firebaseapp.com",
-//   projectId: "kakeibo-dd1e0",
-//   storageBucket: "kakeibo-dd1e0.firebasestorage.app",
-//   messagingSenderId: "1002490623760",
-//   appId: "1:1002490623760:web:c9b163d5a02143ec30d795"
-// };
 
-// const app = initializeApp(firebaseConfig);
-// const db = getFirestore(app);
+// https://firebase.google.com/docs/web/setup#available-libraries
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyByPS96EKSywMMB_BF0MDOEbshjiP8TOug",
+  authDomain: "kakeibo-dd1e0.firebaseapp.com",
+  projectId: "kakeibo-dd1e0",
+  storageBucket: "kakeibo-dd1e0.firebasestorage.app",
+  messagingSenderId: "1002490623760",
+  appId: "1:1002490623760:web:c9b163d5a02143ec30d795"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 // let bdg = {
 //   data: null,
