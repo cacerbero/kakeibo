@@ -1,33 +1,3 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, doc, getDocs, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
-
-// Registrar el service worker
-const sw = new URL('service-worker.js', import.meta.url);
-if ('serviceWorker' in navigator) {
-    const s = navigator.serviceWorker;
-    s.register(sw.href, {
-        scope: '/kakeibo/'
-    })
-    .then(_ => console.log('Service Worker Registered for scope:', sw.href, 'with', import.meta.url))
-    .catch(err => console.error('Service Worker Error:', err));
-}
-
-
-// https://firebase.google.com/docs/web/setup#available-libraries
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyByPS96EKSywMMB_BF0MDOEbshjiP8TOug",
-  authDomain: "kakeibo-dd1e0.firebaseapp.com",
-  projectId: "kakeibo-dd1e0",
-  storageBucket: "kakeibo-dd1e0.firebasestorage.app",
-  messagingSenderId: "1002490623760",
-  appId: "1:1002490623760:web:c9b163d5a02143ec30d795"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
 let bdg = {
   data: null,
   hBal: null,
@@ -36,17 +6,17 @@ let bdg = {
   hList: null,
   hIncomeForm: null,
   hExpenseForm: null,
-  fIncomeID: null, 
-  fIncomeSource: null, 
+  fIncomeID: null,
+  fIncomeSource: null,
   fIncomeAmt: null,
-  fExpenseID: null, 
-  fExpenseTxt: null, 
-  fExpenseAmt: null, 
+  fExpenseID: null,
+  fExpenseTxt: null,
+  fExpenseAmt: null,
   fExpenseCategory: null,
   selectedMonth: null,
+  entries: [],  // Change here: in-memory data, no longer using localStorage
 
-  init: async () => {
-    // Referencias a los elementos HTML
+  init: () => {
     bdg.hBal = document.getElementById("balanceAm");
     bdg.hInc = document.getElementById("incomeAm");
     bdg.hExp = document.getElementById("expenseAm");
@@ -61,11 +31,7 @@ let bdg = {
     bdg.fExpenseAmt = document.getElementById("expenseFormAmt");
     bdg.fExpenseCategory = document.getElementById("expenseFormCategory");
 
-    // Obtener datos de Firestore
-    const querySnapshot = await getDocs(collection(db, "entries"));
-    bdg.entries = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-
-    // Población del selector de meses
+    // Use current month logic from previous solution
     const monthSelect = document.getElementById("monthSelect");
     const currentDate = new Date();
     const currentMonth = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
@@ -93,14 +59,10 @@ let bdg = {
       bdg.draw(); 
     });
 
-    bdg.draw();
-
-    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-      console.log("Service Worker is controlling the page");
-    }
+    bdg.draw();  // Draw entries for the selected month
   },
 
-  toggleIncome: id => {
+  toggleIncome: (id) => {
     console.log("Toggle income function called with id:", id);
     if (id === false) {
       bdg.fIncomeID.value = "";
@@ -117,7 +79,7 @@ let bdg = {
     }
   },
 
-  toggleExpense: id => {
+  toggleExpense: (id) => {
     console.log("Toggle expense function called with id:", id);
     if (id === false) {
       bdg.fExpenseID.value = "";
@@ -167,10 +129,10 @@ let bdg = {
     bdg.hExp.innerHTML = `$${exp.toFixed(2)}`;
   },
 
-  saveIncome: async () => {
+  saveIncome: () => {
     let data = {
       s: "+",
-      t: "",
+      t: "",  // Income doesn't have a description, so it's left empty
       a: parseFloat(bdg.fIncomeAmt.value),
       c: "",
       source: bdg.fIncomeSource.value,
@@ -178,10 +140,9 @@ let bdg = {
     };
 
     if (bdg.fIncomeID.value == "") {
-      await addDoc(collection(db, "entries"), data);
+      bdg.entries.push(data);  // Add new income entry
     } else {
-      const entryRef = doc(db, "entries", bdg.fIncomeID.value);
-      await updateDoc(entryRef, data);
+      bdg.entries[parseInt(bdg.fIncomeID.value)] = data;  // Update existing income entry
     }
 
     bdg.toggleIncome(false);
@@ -189,21 +150,20 @@ let bdg = {
     return false;
   },
 
-  saveExpense: async () => {
+  saveExpense: () => {
     let data = {
       s: "-",
-      t: bdg.fExpenseTxt.value,
+      t: bdg.fExpenseTxt.value,  // Description for the expense
       a: parseFloat(bdg.fExpenseAmt.value),
-      c: bdg.fExpenseCategory.value,
+      c: bdg.fExpenseCategory.value,  // Category for the expense
       source: "",
       date: new Date().toISOString()
     };
 
     if (bdg.fExpenseID.value == "") {
-      await addDoc(collection(db, "entries"), data);
+      bdg.entries.push(data);  // Add new expense entry
     } else {
-      const entryRef = doc(db, "entries", bdg.fExpenseID.value);
-      await updateDoc(entryRef, data);
+      bdg.entries[parseInt(bdg.fExpenseID.value)] = data;  // Update existing expense entry
     }
 
     bdg.toggleExpense(false);
@@ -211,14 +171,12 @@ let bdg = {
     return false;
   },
 
-  del: async id => {
+  del: (id) => {
     if (confirm("Delete entry?")) {
-      const entryRef = doc(db, "entries", bdg.entries[id].id);
-      await deleteDoc(entryRef);
-      bdg.entries.splice(id, 1);
-      bdg.draw();
+      bdg.entries.splice(id, 1);  // Delete the entry from the in-memory list
+      bdg.draw();  // Redraw the updated list
     }
   }
 };
 
-window.onload = bdg.init
+window.onload = bdg.init;
