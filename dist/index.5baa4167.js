@@ -748,6 +748,7 @@ let bdg = {
             source: bdg.fIncomeSource.value,
             date: new Date().toISOString()
         };
+        console.log("Data to send to Firestore:", data);
         try {
             if (bdg.fIncomeID.value === "") // Add new income entry
             await (0, _firestore.addDoc)((0, _firestore.collection)(db, "entries"), data);
