@@ -600,12 +600,12 @@ var _app = require("firebase/app");
 var _firestore = require("firebase/firestore");
 // Firebase Configuration
 const firebaseConfig = {
-    apiKey: "your-api-key",
-    authDomain: "your-auth-domain",
-    projectId: "your-project-id",
-    storageBucket: "your-storage-bucket",
-    messagingSenderId: "your-messaging-sender-id",
-    appId: "your-app-id"
+    apiKey: "AIzaSyByPS96EKSywMMB_BF0MDOEbshjiP8TOug",
+    authDomain: "kakeibo-dd1e0.firebaseapp.com",
+    projectId: "kakeibo-dd1e0",
+    storageBucket: "kakeibo-dd1e0.firebasestorage.app",
+    messagingSenderId: "1002490623760",
+    appId: "1:1002490623760:web:c9b163d5a02143ec30d795"
 };
 // Initialize Firebase
 const app = (0, _app.initializeApp)(firebaseConfig);
