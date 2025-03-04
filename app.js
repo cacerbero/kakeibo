@@ -3,12 +3,12 @@ import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, deleteDoc } 
 
 // Firebase Configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBd-5J7Nz5h7qYwvuitlPubTNzCmlL1xZI",
-  authDomain: "checklist-3d13a.firebaseapp.com",
-  projectId: "checklist-3d13a",
-  storageBucket: "checklist-3d13a.firebasestorage.app",
-  messagingSenderId: "537572989728",
-  appId: "1:537572989728:web:a4e786dfbdd06772745545"
+  apiKey: "AIzaSyByPS96EKSywMMB_BF0MDOEbshjiP8TOug",
+  authDomain: "kakeibo-dd1e0.firebaseapp.com",
+  projectId: "kakeibo-dd1e0",
+  storageBucket: "kakeibo-dd1e0.firebasestorage.app",
+  messagingSenderId: "1002490623760",
+  appId: "1:1002490623760:web:c9b163d5a02143ec30d795"
 };
 
 // Initialize Firebase
