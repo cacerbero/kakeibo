@@ -1,89 +1,3 @@
-// import { initializeApp } from "firebase/app";
-// import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, deleteDoc, Timestamp } from "firebase/firestore";
-
-// // 1 Firebase Configuration
-// const firebaseConfig = {
-//   apiKey: "AIzaSyByPS96EKSywMMB_BF0MDOEbshjiP8TOug",
-//   authDomain: "kakeibo-dd1e0.firebaseapp.com",
-//   projectId: "kakeibo-dd1e0",
-//   storageBucket: "kakeibo-dd1e0.firebasestorage.app",
-//   messagingSenderId: "1002490623760",
-//   appId: "1:1002490623760:web:9ced7a94e76fe0e930d795"
-// };
-
-// console.log(firebaseConfig);
-// // 2 Initialize Firebase
-// const app = initializeApp(firebaseConfig);
-// console.log(app);
-// const db = getFirestore(app);
-// console.log(db);
-
-// let bdg = {
-//   hBal: null,
-//   hInc: null,
-//   hExp: null,
-//   hList: null,
-//   hIncomeForm: null,
-//   hExpenseForm: null,
-//   fIncomeID: null,
-//   fIncomeSource: null,
-//   fIncomeAmt: null,
-//   fExpenseID: null,
-//   fExpenseTxt: null,
-//   fExpenseAmt: null,
-//   fExpenseCategory: null,
-//   selectedMonth: null,
-// };
-
-// window.onload = () => {
-//   initializeUI();
-//   draw();
-// };
-
-// // 3 Initialize UI elements
-// function initializeUI() {
-//   bdg.hBal = document.getElementById("balanceAm");
-//   bdg.hInc = document.getElementById("incomeAm");
-//   bdg.hExp = document.getElementById("expenseAm");
-//   bdg.hList = document.getElementById("list");
-//   bdg.hIncomeForm = document.getElementById("incomeForm");
-//   bdg.hExpenseForm = document.getElementById("expenseForm");
-//   bdg.fIncomeID = document.getElementById("incomeFormID");
-//   bdg.fIncomeSource = document.getElementById("incomeFormSource");
-//   bdg.fIncomeAmt = document.getElementById("incomeFormAmt");
-//   bdg.fExpenseID = document.getElementById("expenseFormID");
-//   bdg.fExpenseTxt = document.getElementById("expenseFormTxt");
-//   bdg.fExpenseAmt = document.getElementById("expenseFormAmt");
-//   bdg.fExpenseCategory = document.getElementById("expenseFormCategory");
-
-//   const monthSelect = document.getElementById("monthSelect");
-//   const currentDate = new Date();
-//   const currentMonth = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
-
-//   const months = [];
-//   for (let i = 0; i < 12; i++) {
-//     const month = new Date(currentDate.getFullYear(), i);
-//     const monthString = month.toLocaleString('default', { month: 'long', year: 'numeric' });
-//     months.push(monthString);
-//   }
-
-//   monthSelect.innerHTML = '';
-//   months.forEach(month => {
-//     const option = document.createElement('option');
-//     option.value = month;
-//     option.textContent = month;
-//     monthSelect.appendChild(option);
-//   });
-
-//   monthSelect.value = currentMonth;
-//   bdg.selectedMonth = currentMonth;
-
-//   monthSelect.addEventListener("change", (e) => {
-//     bdg.selectedMonth = e.target.value;
-//     draw();
-//   });
-// }
-
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, deleteDoc, Timestamp } from "firebase/firestore";
 
@@ -92,13 +6,12 @@ const firebaseConfig = {
   apiKey: "AIzaSyByPS96EKSywMMB_BF0MDOEbshjiP8TOug",
   authDomain: "kakeibo-dd1e0.firebaseapp.com",
   projectId: "kakeibo-dd1e0",
-  storageBucket: "kakeibo-dd1e0",
+  storageBucket: "kakeibo-dd1e0.firebasestorage.app",
   messagingSenderId: "1002490623760",
   appId: "1:1002490623760:web:9ced7a94e76fe0e930d795"
 };
 
 console.log(firebaseConfig);
-
 // 2 Initialize Firebase
 const app = initializeApp(firebaseConfig);
 console.log(app);
@@ -143,8 +56,6 @@ function initializeUI() {
   bdg.fExpenseAmt = document.getElementById("expenseFormAmt");
   bdg.fExpenseCategory = document.getElementById("expenseFormCategory");
 
-  console.log("UI elements initialized");
-
   const monthSelect = document.getElementById("monthSelect");
   const currentDate = new Date();
   const currentMonth = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
@@ -164,20 +75,14 @@ function initializeUI() {
     monthSelect.appendChild(option);
   });
 
-  console.log("Month select options initialized");
-
   monthSelect.value = currentMonth;
   bdg.selectedMonth = currentMonth;
 
   monthSelect.addEventListener("change", (e) => {
-    console.log("Month selected:", e.target.value);
     bdg.selectedMonth = e.target.value;
     draw();
   });
-
-  console.log("Month select event listener added");
 }
-
 
 // 4 Toggle visibility of income form
 function toggleIncome(id) {
@@ -276,38 +181,7 @@ async function draw() {
   }
 }
 
-// // 8 Save Income to Firestore (must be async)
-// async function saveIncome() {
-//   const data = {
-//     s: "+",  // Income
-//     t: "",  
-//     a: parseFloat(bdg.fIncomeAmt.value),
-//     c: "",
-//     source: bdg.fIncomeSource.value,
-//     date: Timestamp.fromDate(new Date()), // Usamos el Timestamp de Firestore
-//   };
-
-//   console.log("Saving income to Firestore:", data);
-
-//   try {
-//     if (bdg.fIncomeID.value === "") {
-//       const docRef = await addDoc(collection(db, "entries"), data);
-//       console.log("New income added:", data);
-//       console.log("Document ID:", docRef.id);
-//     } else {
-//       const incomeDocRef = doc(db, "entries", bdg.fIncomeID.value);
-//       await updateDoc(incomeDocRef, data);
-//       console.log("Income updated:", data);
-//     }
-
-//     toggleIncome(false);
-//     draw();
-//   } catch (e) {
-//     console.error("Error saving income:", e);
-//   }
-// }
-
-// 11. Guardar Ingreso en Firestore (debe ser async)
+// 8 Save Income to Firestore (must be async)
 async function saveIncome() {
   const data = {
     s: "+",  // Income
@@ -318,29 +192,27 @@ async function saveIncome() {
     date: Timestamp.fromDate(new Date()), // Usamos el Timestamp de Firestore
   };
 
-  console.log("Saving income to Firestore:", data);  // Sección 11-1
+  console.log("Saving income to Firestore:", data);
 
   try {
     if (bdg.fIncomeID.value === "") {
       const docRef = await addDoc(collection(db, "entries"), data);
-      console.log("New income added:", data);  // Sección 11-2
-      console.log("Document ID:", docRef.id);  // Sección 11-3
+      console.log("New income added:", data);
+      console.log("Document ID:", docRef.id);
     } else {
       const incomeDocRef = doc(db, "entries", bdg.fIncomeID.value);
       await updateDoc(incomeDocRef, data);
-      console.log("Income updated:", data);  // Sección 11-4
+      console.log("Income updated:", data);
     }
 
-    console.log("Toggling income form off");  // Sección 11-5
     toggleIncome(false);
-    console.log("Calling draw function");  // Sección 11-6
     draw();
   } catch (e) {
-    console.error("Error saving income:", e);  // Sección 11-7
+    console.error("Error saving income:", e);
   }
 }
 
-// 12. Guardar Gasto en Firestore (debe ser async)
+// 9 Save Expense to Firestore (must be async)
 async function saveExpense() {
   const data = {
     s: "-",  // Expense
@@ -351,108 +223,47 @@ async function saveExpense() {
     date: Timestamp.fromDate(new Date()), // Usamos el Timestamp de Firestore
   };
 
-  console.log("Saving expense to Firestore:", data);  // Sección 12-1
+  console.log("Saving expense to Firestore:", data);
 
   try {
     if (bdg.fExpenseID.value === "") {
       const docRef = await addDoc(collection(db, "entries"), data);
-      console.log("New expense added:", data);  // Sección 12-2
-      console.log("Document ID:", docRef.id);  // Sección 12-3
+      console.log("New expense added:", data);
+      console.log("Document ID:", docRef.id);
     } else {
       const expenseDocRef = doc(db, "entries", bdg.fExpenseID.value);
       await updateDoc(expenseDocRef, data);
-      console.log("Expense updated:", data);  // Sección 12-4
+      console.log("Expense updated:", data);
     }
 
-    console.log("Toggling expense form off");  // Sección 12-5
     toggleExpense(false);
-    console.log("Calling draw function");  // Sección 12-6
     draw();
   } catch (e) {
-    console.error("Error saving expense:", e);  // Sección 12-7
+    console.error("Error saving expense:", e);
   }
 }
 
-// 13. Eliminar entrada de Firestore (debe ser async)
+//10  Delete entry from Firestore (must be async)
 async function del(id) {
-  console.log(`Deleting entry with ID: ${id}`);  // Sección 13-1
+  console.log(`Deleting entry with ID: ${id}`);
 
   if (confirm("Delete entry?")) {
     try {
       const entryDocRef = doc(db, "entries", id);
       await deleteDoc(entryDocRef);
-      console.log(`Entry deleted with ID: ${id}`);  // Sección 13-2
+      console.log(`Entry deleted with ID: ${id}`);
       draw();
     } catch (e) {
-      console.error("Error deleting entry:", e);  // Sección 13-3
+      console.error("Error deleting entry:", e);
     }
   }
 }
 
-// 14. Event listeners para botones de ingreso y gasto
+// 11Event listeners
 document.getElementById("newIncomeBtn").addEventListener("click", () => {
-  console.log("New income button clicked");  // Sección 14-1
   toggleIncome(true);
 });
 
 document.getElementById("newExpenseBtn").addEventListener("click", () => {
-  console.log("New expense button clicked");  // Sección 14-2
   toggleExpense(true);
 });
-
-
-// // 9 Save Expense to Firestore (must be async)
-// async function saveExpense() {
-//   const data = {
-//     s: "-",  // Expense
-//     t: bdg.fExpenseTxt.value,
-//     a: parseFloat(bdg.fExpenseAmt.value),
-//     c: bdg.fExpenseCategory.value,
-//     source: "",
-//     date: Timestamp.fromDate(new Date()), // Usamos el Timestamp de Firestore
-//   };
-
-//   console.log("Saving expense to Firestore:", data);
-
-//   try {
-//     if (bdg.fExpenseID.value === "") {
-//       const docRef = await addDoc(collection(db, "entries"), data);
-//       console.log("New expense added:", data);
-//       console.log("Document ID:", docRef.id);
-//     } else {
-//       const expenseDocRef = doc(db, "entries", bdg.fExpenseID.value);
-//       await updateDoc(expenseDocRef, data);
-//       console.log("Expense updated:", data);
-//     }
-
-//     toggleExpense(false);
-//     draw();
-//   } catch (e) {
-//     console.error("Error saving expense:", e);
-//   }
-// }
-
-// //10  Delete entry from Firestore (must be async)
-// async function del(id) {
-//   console.log(`Deleting entry with ID: ${id}`);
-
-//   if (confirm("Delete entry?")) {
-//     try {
-//       const entryDocRef = doc(db, "entries", id);
-//       await deleteDoc(entryDocRef);
-//       console.log(`Entry deleted with ID: ${id}`);
-//       draw();
-//     } catch (e) {
-//       console.error("Error deleting entry:", e);
-//     }
-//   }
-// }
-
-// // 11Event listeners
-// document.getElementById("newIncomeBtn").addEventListener("click", () => {
-//   toggleIncome(true);
-// });
-
-// document.getElementById("newExpenseBtn").addEventListener("click", () => {
-//   toggleExpense(true);
-// });
