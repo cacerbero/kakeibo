@@ -18,6 +18,22 @@ console.log(app);
 const db = getFirestore(app);
 console.log(db);
 
+//Retrieve elements by ID
+const newIncomeBtn = document.getElementById('newIncomeBtn');
+const newExpenseBtn = document.getElementById('newExpenseBtn');
+const incomeForm = document.getElementById('incomeForm');
+const expenseForm = document.getElementById('expenseForm');
+const incomeFormEnd = document.getElementById('incomeFormEnd');
+const expenseFormEnd = document.getElementById('expenseFormEnd');
+const incomeFormElem = document.getElementById('incomeFormElem');
+const expenseFormElem = document.getElementById('expenseFormElem');
+
+// Quick Event listeners 
+newIncomeBtn.addEventListener('click', () => {
+  incomeForm.classList.toggle('hidden');
+});
+
+
 let bdg = {
   hBal: null,
   hInc: null,
