@@ -1,7 +1,7 @@
 {
   "projects": {
-    "default": "checklist-3d13a",
-    "kakeibo": "checklist-3d13a"
+    "default": "checklist-3d13a"
+
   },
   "targets": {},
   "etags": {}
