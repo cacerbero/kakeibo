@@ -1,0 +1,211 @@
+
+/* Global reset for margins and paddings */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body with high-contrast background */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f4f4f4;
+  padding: 20px;
+  text-align: center; 
+}
+
+/* Alfa - Header Section */
+header {
+  text-align: center; 
+  margin-bottom: 20px;
+}
+
+header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333; 
+}
+
+header select {
+  font-size: 1rem;
+  padding: 10px;
+  margin-top: 10px;
+  width: 200px;
+  border: 2px solid #333; 
+  border-radius: 5px;
+  background-color: #fff; 
+  color: #333; 
+}
+
+header select:focus {
+  border-color: #1c5d95; 
+  outline: none;
+}
+
+/* Beta - Summary Section */
+#summary {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 30px;
+}
+
+#summary section {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 30%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#summary h2 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #1c5d95; 
+}
+
+#summary div {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Gamma - Entries List Section */
+#entries {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.entry-card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 32%;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.entry-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.entry-card button {
+  background-color: #1c5d95;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 20px;
+}
+
+.entry-card button:hover,
+.entry-card button:focus {
+  background-color: #154b7f; 
+}
+
+.entry-card button:focus {
+  outline: 2px solid #154b7f; 
+}
+
+/* Form Fields */
+.entry-card form label {
+  font-size: 1rem;
+  margin-top: 15px;
+  color: #555;
+  display: block;
+}
+
+.entry-card form input,
+.entry-card form select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #333;
+}
+
+.entry-card form input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+  appearance: textfield; 
+}
+
+.entry-card form button {
+  background-color: #1c5d95;
+  color: white;
+  font-size: 1.1rem;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.entry-card form button:hover,
+.entry-card form button:focus {
+  background-color: #154b7f;
+  outline: 2px solid #154b7f; 
+}
+
+/* Entries List Styling */
+.entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.entry .eDel {
+  cursor: pointer;
+  color: #ab2020;
+  font-weight: bold;
+}
+
+.entry .eTxt, .entry .eCat, .entry .eAmt, .entry .eSource {
+  flex: 1;
+  text-align: left;
+}
+
+.entry .eEdit {
+  cursor: pointer;
+  color: #1c5d95;
+  font-weight: bold;
+}
+
+/* Focused Elements */
+button:focus, input:focus, select:focus {
+  outline: 3px solid #1c5d95; 
+}
+
+/* Ensure responsive design */
+@media (max-width: 768px) {
+  #summary {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #summary section {
+    width: 80%;
+    margin-bottom: 20px;
+  }
+
+  #entries {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .entry-card {
+    width: 90%;
+  }
+}

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Budget Planner">
+  <meta name="viewport" content="width=device-width, initial-scale=1.5">
+  <title>C-ACE Budget Tool</title>
+  <link rel="icon" href="icons/favicon.ico" type="x-icon">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CBX7MYS8PL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-CBX7MYS8PL');
+</script>
+
+<body>
+  <header>
+    <h1>Kakeibo Budget</h1>
+    <div>
+      <label for="monthSelect">Select Month:</label>
+      <select id="monthSelect" aria-label="Select Month"></select>
+    </div>
+  </header>
+
+  <div id="summary">
+    <section id="balance">
+      <h2>Balance</h2>
+      <div id="balanceAm">$0</div>
+    </section>
+
+    <section id="income">
+      <h2>Income</h2>
+      <div id="incomeAm">$0</div>
+    </section>
+
+    <section id="expense">
+      <h2>Expense</h2>
+      <div id="expenseAm">$0</div>
+    </section>
+  </div>
+
+  <section id="entries">
+    <div class="entry-card" id="listCard">
+      <h2>Entries</h2>
+      <div id="list"></div>
+    </div>
+
+    <!-- Income Section -->
+    <div class="entry-card">
+      <button id="newIncomeBtn" aria-label="Create a new income" aria-expanded="false">New Income</button>
+      <div id="listIncome"></div>
+
+      <section id="incomeForm" class="hidden" aria-labelledby="incomeFormTitle">
+        <h2 id="incomeFormTitle">Income Form</h2>
+        <form id="incomeFormElem" aria-labelledby="incomeFormTitle" aria-describedby="incomeFormDesc">
+          <button id="incomeFormEnd" aria-label="Close Form" type="button">X</button>
+          <input type="hidden" id="incomeFormID">
+          <label for="incomeFormSource">Income Source</label>
+          <input type="text" id="incomeFormSource" aria-label="Income Source" required>
+          
+          <label for="incomeFormAmt">Amount</label>
+          <input type="number" id="incomeFormAmt" step="0.01" required>
+
+          <button type="submit" id="incomeFormGo" aria-label="Save Income">Save</button>
+        </form>
+      </section>
+    </div>
+
+    <!-- Expense Section -->
+    <div class="entry-card">
+      <button id="newExpenseBtn" aria-label="Create a new expense" aria-expanded="false">New Expense</button>
+      <div id="listExpense"></div>
+
+      <section id="expenseForm" class="hidden" aria-labelledby="expenseFormTitle">
+        <h2 id="expenseFormTitle">Expense Form</h2>
+        <form id="expenseFormElem" aria-labelledby="expenseFormTitle" aria-describedby="expenseFormDesc">
+          <button id="expenseFormEnd" aria-label="Close Form" type="button">X</button>
+          <input type="hidden" id="expenseFormID">
+          
+          <label for="expenseFormTxt">Description</label>
+          <input type="text" id="expenseFormTxt" required>
+          
+          <label for="expenseFormAmt">Amount</label>
+          <input type="number" id="expenseFormAmt" step="0.01" required>
+          
+          <label for="expenseFormCategory">Category</label>
+          <select id="expenseFormCategory" required>
+            <option value="needs">Needs</option>
+            <option value="wants">Wants</option>
+            <option value="culture">Culture</option>
+            <option value="unexpected">Unexpected</option>
+          </select>
+
+          <button type="submit" id="expenseFormGo" aria-label="Save Expense">Save</button>
+        </form>
+      </section>
+    </div>
+  </section>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
