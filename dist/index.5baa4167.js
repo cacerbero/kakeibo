@@ -596,20 +596,98 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 }
 
 },{}],"igcvL":[function(require,module,exports,__globalThis) {
+// import { initializeApp } from "firebase/app";
+// import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, deleteDoc, Timestamp } from "firebase/firestore";
+// // 1 Firebase Configuration
+// const firebaseConfig = {
+//   apiKey: "AIzaSyByPS96EKSywMMB_BF0MDOEbshjiP8TOug",
+//   authDomain: "kakeibo-dd1e0.firebaseapp.com",
+//   projectId: "kakeibo-dd1e0",
+//   storageBucket: "kakeibo-dd1e0.firebasestorage.app",
+//   messagingSenderId: "1002490623760",
+//   appId: "1:1002490623760:web:9ced7a94e76fe0e930d795"
+// };
+// console.log(firebaseConfig);
+// // 2 Initialize Firebase
+// const app = initializeApp(firebaseConfig);
+// console.log(app);
+// const db = getFirestore(app);
+// console.log(db);
+// let bdg = {
+//   hBal: null,
+//   hInc: null,
+//   hExp: null,
+//   hList: null,
+//   hIncomeForm: null,
+//   hExpenseForm: null,
+//   fIncomeID: null,
+//   fIncomeSource: null,
+//   fIncomeAmt: null,
+//   fExpenseID: null,
+//   fExpenseTxt: null,
+//   fExpenseAmt: null,
+//   fExpenseCategory: null,
+//   selectedMonth: null,
+// };
+// window.onload = () => {
+//   initializeUI();
+//   draw();
+// };
+// // 3 Initialize UI elements
+// function initializeUI() {
+//   bdg.hBal = document.getElementById("balanceAm");
+//   bdg.hInc = document.getElementById("incomeAm");
+//   bdg.hExp = document.getElementById("expenseAm");
+//   bdg.hList = document.getElementById("list");
+//   bdg.hIncomeForm = document.getElementById("incomeForm");
+//   bdg.hExpenseForm = document.getElementById("expenseForm");
+//   bdg.fIncomeID = document.getElementById("incomeFormID");
+//   bdg.fIncomeSource = document.getElementById("incomeFormSource");
+//   bdg.fIncomeAmt = document.getElementById("incomeFormAmt");
+//   bdg.fExpenseID = document.getElementById("expenseFormID");
+//   bdg.fExpenseTxt = document.getElementById("expenseFormTxt");
+//   bdg.fExpenseAmt = document.getElementById("expenseFormAmt");
+//   bdg.fExpenseCategory = document.getElementById("expenseFormCategory");
+//   const monthSelect = document.getElementById("monthSelect");
+//   const currentDate = new Date();
+//   const currentMonth = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+//   const months = [];
+//   for (let i = 0; i < 12; i++) {
+//     const month = new Date(currentDate.getFullYear(), i);
+//     const monthString = month.toLocaleString('default', { month: 'long', year: 'numeric' });
+//     months.push(monthString);
+//   }
+//   monthSelect.innerHTML = '';
+//   months.forEach(month => {
+//     const option = document.createElement('option');
+//     option.value = month;
+//     option.textContent = month;
+//     monthSelect.appendChild(option);
+//   });
+//   monthSelect.value = currentMonth;
+//   bdg.selectedMonth = currentMonth;
+//   monthSelect.addEventListener("change", (e) => {
+//     bdg.selectedMonth = e.target.value;
+//     draw();
+//   });
+// }
 var _app = require("firebase/app");
 var _firestore = require("firebase/firestore");
-// Firebase Configuration
+// 1 Firebase Configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyBd-5J7Nz5h7qYwvuitlPubTNzCmlL1xZI",
-    authDomain: "checklist-3d13a.firebaseapp.com",
-    projectId: "checklist-3d13a",
-    storageBucket: "checklist-3d13a.firebasestorage.app",
-    messagingSenderId: "537572989728",
-    appId: "1:537572989728:web:a4e786dfbdd06772745545"
+    apiKey: "AIzaSyByPS96EKSywMMB_BF0MDOEbshjiP8TOug",
+    authDomain: "kakeibo-dd1e0.firebaseapp.com",
+    projectId: "kakeibo-dd1e0",
+    storageBucket: "kakeibo-dd1e0",
+    messagingSenderId: "1002490623760",
+    appId: "1:1002490623760:web:9ced7a94e76fe0e930d795"
 };
-// Initialize Firebase
+console.log(firebaseConfig);
+// 2 Initialize Firebase
 const app = (0, _app.initializeApp)(firebaseConfig);
+console.log(app);
 const db = (0, _firestore.getFirestore)(app);
+console.log(db);
 let bdg = {
     hBal: null,
     hInc: null,
@@ -630,7 +708,7 @@ window.onload = ()=>{
     initializeUI();
     draw();
 };
-// Initialize UI elements
+// 3 Initialize UI elements
 function initializeUI() {
     bdg.hBal = document.getElementById("balanceAm");
     bdg.hInc = document.getElementById("incomeAm");
@@ -645,6 +723,7 @@ function initializeUI() {
     bdg.fExpenseTxt = document.getElementById("expenseFormTxt");
     bdg.fExpenseAmt = document.getElementById("expenseFormAmt");
     bdg.fExpenseCategory = document.getElementById("expenseFormCategory");
+    console.log("UI elements initialized");
     const monthSelect = document.getElementById("monthSelect");
     const currentDate = new Date();
     const currentMonth = currentDate.toLocaleString('default', {
@@ -667,14 +746,17 @@ function initializeUI() {
         option.textContent = month;
         monthSelect.appendChild(option);
     });
+    console.log("Month select options initialized");
     monthSelect.value = currentMonth;
     bdg.selectedMonth = currentMonth;
     monthSelect.addEventListener("change", (e)=>{
+        console.log("Month selected:", e.target.value);
         bdg.selectedMonth = e.target.value;
         draw();
     });
+    console.log("Month select event listener added");
 }
-// Toggle visibility of income form
+// 4 Toggle visibility of income form
 function toggleIncome(id) {
     if (id === false) {
         bdg.fIncomeID.value = "";
@@ -690,7 +772,7 @@ function toggleIncome(id) {
         bdg.hIncomeForm.classList.remove("hidden");
     }
 }
-// Toggle visibility of expense form
+// 5 Toggle visibility of expense form
 function toggleExpense(id) {
     if (id === false) {
         bdg.fExpenseID.value = "";
@@ -708,7 +790,7 @@ function toggleExpense(id) {
         bdg.hExpenseForm.classList.remove("hidden");
     }
 }
-// Draw the balance, income, expense, and list
+// 6 Draw the balance, income, expense, and list (must be async)
 async function draw() {
     let bal = 0, inc = 0, exp = 0, row;
     console.log("Fetching entries from Firestore...");
@@ -719,28 +801,36 @@ async function draw() {
         querySnapshot.forEach((doc)=>{
             const entry = doc.data();
             entry.id = doc.id;
-            const entryDate = new Date(entry.date);
-            const entryMonth = entryDate.toLocaleString('default', {
-                month: 'long',
-                year: 'numeric'
-            });
-            if (entryMonth === bdg.selectedMonth) {
-                if (entry.s == "+") {
-                    inc += entry.a;
-                    bal += entry.a;
-                } else {
-                    exp += entry.a;
-                    bal -= entry.a;
-                }
-                row = document.createElement("div");
-                row.className = `entry ${entry.s == "+" ? "income" : "expense"}`;
-                row.innerHTML = `<div class="eDel" onclick="del('${entry.id}')">X</div>
-        <div class="eTxt">${entry.t || entry.source}</div>
-        <div class="eCat">${entry.c || ""}</div>
-        <div class="eAmt">$${parseFloat(entry.a).toFixed(2)}</div>
-        <div class="eEdit" onclick="toggle('${entry.id}')">&#9998;</div>`;
-                bdg.hList.appendChild(row);
+            // 7 Asegurarnos de que 'entry.date' existe y es un Timestamp antes de convertirlo
+            let entryDate = null;
+            if (entry.date) {
+                // Verificar si es un Timestamp de Firestore
+                if (entry.date instanceof (0, _firestore.Timestamp)) entryDate = entry.date.toDate();
+                else if (entry.date instanceof Date) entryDate = entry.date;
             }
+            if (entryDate) {
+                const entryMonth = entryDate.toLocaleString('default', {
+                    month: 'long',
+                    year: 'numeric'
+                });
+                if (entryMonth === bdg.selectedMonth) {
+                    if (entry.s == "+") {
+                        inc += entry.a;
+                        bal += entry.a;
+                    } else {
+                        exp += entry.a;
+                        bal -= entry.a;
+                    }
+                    row = document.createElement("div");
+                    row.className = `entry ${entry.s == "+" ? "income" : "expense"}`;
+                    row.innerHTML = `<div class="eDel" onclick="del('${entry.id}')">X</div>
+          <div class="eTxt">${entry.t || entry.source}</div>
+          <div class="eCat">${entry.c || ""}</div>
+          <div class="eAmt">$${parseFloat(entry.a).toFixed(2)}</div>
+          <div class="eEdit" onclick="toggle('${entry.id}')">&#9998;</div>`;
+                    bdg.hList.appendChild(row);
+                }
+            } else console.error("Invalid or missing 'date' field for entry:", entry.id);
         });
         bdg.hBal.innerHTML = bal < 0 ? `-$${Math.abs(bal).toFixed(2)}` : `$${bal.toFixed(2)}`;
         bdg.hInc.innerHTML = `$${inc.toFixed(2)}`;
@@ -749,7 +839,34 @@ async function draw() {
         console.error("Error fetching data from Firestore:", e);
     }
 }
-// Save Income to Firestore
+// // 8 Save Income to Firestore (must be async)
+// async function saveIncome() {
+//   const data = {
+//     s: "+",  // Income
+//     t: "",  
+//     a: parseFloat(bdg.fIncomeAmt.value),
+//     c: "",
+//     source: bdg.fIncomeSource.value,
+//     date: Timestamp.fromDate(new Date()), // Usamos el Timestamp de Firestore
+//   };
+//   console.log("Saving income to Firestore:", data);
+//   try {
+//     if (bdg.fIncomeID.value === "") {
+//       const docRef = await addDoc(collection(db, "entries"), data);
+//       console.log("New income added:", data);
+//       console.log("Document ID:", docRef.id);
+//     } else {
+//       const incomeDocRef = doc(db, "entries", bdg.fIncomeID.value);
+//       await updateDoc(incomeDocRef, data);
+//       console.log("Income updated:", data);
+//     }
+//     toggleIncome(false);
+//     draw();
+//   } catch (e) {
+//     console.error("Error saving income:", e);
+//   }
+// }
+// 11. Guardar Ingreso en Firestore (debe ser async)
 async function saveIncome() {
     const data = {
         s: "+",
@@ -757,25 +874,28 @@ async function saveIncome() {
         a: parseFloat(bdg.fIncomeAmt.value),
         c: "",
         source: bdg.fIncomeSource.value,
-        date: new Date().toISOString()
+        date: (0, _firestore.Timestamp).fromDate(new Date())
     };
-    console.log("Saving income to Firestore:", data);
+    console.log("Saving income to Firestore:", data); // Sección 11-1
     try {
         if (bdg.fIncomeID.value === "") {
-            await (0, _firestore.addDoc)((0, _firestore.collection)(db, "entries"), data);
-            console.log("New income added:", data);
+            const docRef = await (0, _firestore.addDoc)((0, _firestore.collection)(db, "entries"), data);
+            console.log("New income added:", data); // Sección 11-2
+            console.log("Document ID:", docRef.id); // Sección 11-3
         } else {
             const incomeDocRef = (0, _firestore.doc)(db, "entries", bdg.fIncomeID.value);
             await (0, _firestore.updateDoc)(incomeDocRef, data);
-            console.log("Income updated:", data);
+            console.log("Income updated:", data); // Sección 11-4
         }
+        console.log("Toggling income form off"); // Sección 11-5
         toggleIncome(false);
+        console.log("Calling draw function"); // Sección 11-6
         draw();
     } catch (e) {
-        console.error("Error saving income:", e);
+        console.error("Error saving income:", e); // Sección 11-7
     }
 }
-// Save Expense to Firestore
+// 12. Guardar Gasto en Firestore (debe ser async)
 async function saveExpense() {
     const data = {
         s: "-",
@@ -783,43 +903,95 @@ async function saveExpense() {
         a: parseFloat(bdg.fExpenseAmt.value),
         c: bdg.fExpenseCategory.value,
         source: "",
-        date: new Date().toISOString()
+        date: (0, _firestore.Timestamp).fromDate(new Date())
     };
-    console.log("Saving expense to Firestore:", data);
+    console.log("Saving expense to Firestore:", data); // Sección 12-1
     try {
         if (bdg.fExpenseID.value === "") {
-            await (0, _firestore.addDoc)((0, _firestore.collection)(db, "entries"), data);
-            console.log("New expense added:", data);
+            const docRef = await (0, _firestore.addDoc)((0, _firestore.collection)(db, "entries"), data);
+            console.log("New expense added:", data); // Sección 12-2
+            console.log("Document ID:", docRef.id); // Sección 12-3
         } else {
             const expenseDocRef = (0, _firestore.doc)(db, "entries", bdg.fExpenseID.value);
             await (0, _firestore.updateDoc)(expenseDocRef, data);
-            console.log("Expense updated:", data);
+            console.log("Expense updated:", data); // Sección 12-4
         }
+        console.log("Toggling expense form off"); // Sección 12-5
         toggleExpense(false);
+        console.log("Calling draw function"); // Sección 12-6
         draw();
     } catch (e) {
-        console.error("Error saving expense:", e);
+        console.error("Error saving expense:", e); // Sección 12-7
     }
 }
-// Delete entry from Firestore
+// 13. Eliminar entrada de Firestore (debe ser async)
 async function del(id) {
-    console.log(`Deleting entry with ID: ${id}`);
+    console.log(`Deleting entry with ID: ${id}`); // Sección 13-1
     if (confirm("Delete entry?")) try {
         const entryDocRef = (0, _firestore.doc)(db, "entries", id);
         await (0, _firestore.deleteDoc)(entryDocRef);
-        console.log(`Entry deleted with ID: ${id}`);
+        console.log(`Entry deleted with ID: ${id}`); // Sección 13-2
         draw();
     } catch (e) {
-        console.error("Error deleting entry:", e);
+        console.error("Error deleting entry:", e); // Sección 13-3
     }
 }
-// Event listeners
+// 14. Event listeners para botones de ingreso y gasto
 document.getElementById("newIncomeBtn").addEventListener("click", ()=>{
+    console.log("New income button clicked"); // Sección 14-1
     toggleIncome(true);
 });
 document.getElementById("newExpenseBtn").addEventListener("click", ()=>{
+    console.log("New expense button clicked"); // Sección 14-2
     toggleExpense(true);
-});
+}); // // 9 Save Expense to Firestore (must be async)
+ // async function saveExpense() {
+ //   const data = {
+ //     s: "-",  // Expense
+ //     t: bdg.fExpenseTxt.value,
+ //     a: parseFloat(bdg.fExpenseAmt.value),
+ //     c: bdg.fExpenseCategory.value,
+ //     source: "",
+ //     date: Timestamp.fromDate(new Date()), // Usamos el Timestamp de Firestore
+ //   };
+ //   console.log("Saving expense to Firestore:", data);
+ //   try {
+ //     if (bdg.fExpenseID.value === "") {
+ //       const docRef = await addDoc(collection(db, "entries"), data);
+ //       console.log("New expense added:", data);
+ //       console.log("Document ID:", docRef.id);
+ //     } else {
+ //       const expenseDocRef = doc(db, "entries", bdg.fExpenseID.value);
+ //       await updateDoc(expenseDocRef, data);
+ //       console.log("Expense updated:", data);
+ //     }
+ //     toggleExpense(false);
+ //     draw();
+ //   } catch (e) {
+ //     console.error("Error saving expense:", e);
+ //   }
+ // }
+ // //10  Delete entry from Firestore (must be async)
+ // async function del(id) {
+ //   console.log(`Deleting entry with ID: ${id}`);
+ //   if (confirm("Delete entry?")) {
+ //     try {
+ //       const entryDocRef = doc(db, "entries", id);
+ //       await deleteDoc(entryDocRef);
+ //       console.log(`Entry deleted with ID: ${id}`);
+ //       draw();
+ //     } catch (e) {
+ //       console.error("Error deleting entry:", e);
+ //     }
+ //   }
+ // }
+ // // 11Event listeners
+ // document.getElementById("newIncomeBtn").addEventListener("click", () => {
+ //   toggleIncome(true);
+ // });
+ // document.getElementById("newExpenseBtn").addEventListener("click", () => {
+ //   toggleExpense(true);
+ // });
 
 },{"firebase/app":"aM3Fo","firebase/firestore":"8A4BC"}],"aM3Fo":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
