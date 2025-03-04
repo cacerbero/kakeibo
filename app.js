@@ -8,7 +8,7 @@ const firebaseConfig = {
   projectId: "kakeibo-dd1e0",
   storageBucket: "kakeibo-dd1e0.firebasestorage.app",
   messagingSenderId: "1002490623760",
-  appId: "1:1002490623760:web:c9b163d5a02143ec30d795"
+  appId: "1:1002490623760:web:9ced7a94e76fe0e930d795"
 };
 
 // Initialize Firebase
@@ -117,11 +117,11 @@ function toggleExpense(id) {
   }
 }
 
-// Draw the balance, income, expense, and list
+// Draw the balance, income, expense, and list (must be async)
 async function draw() {
   let bal = 0, inc = 0, exp = 0, row;
   console.log("Fetching entries from Firestore...");
-  
+
   try {
     const querySnapshot = await getDocs(collection(db, "entries"));
     console.log("Entries fetched:", querySnapshot.docs.length);
@@ -164,7 +164,7 @@ async function draw() {
   }
 }
 
-// Save Income to Firestore
+// Save Income to Firestore (must be async)
 async function saveIncome() {
   const data = {
     s: "+",  // Income
@@ -179,8 +179,9 @@ async function saveIncome() {
 
   try {
     if (bdg.fIncomeID.value === "") {
-      await addDoc(collection(db, "entries"), data);
+      const docRef = await addDoc(collection(db, "entries"), data);
       console.log("New income added:", data);
+      console.log("Document ID:", docRef.id);
     } else {
       const incomeDocRef = doc(db, "entries", bdg.fIncomeID.value);
       await updateDoc(incomeDocRef, data);
@@ -194,7 +195,7 @@ async function saveIncome() {
   }
 }
 
-// Save Expense to Firestore
+// Save Expense to Firestore (must be async)
 async function saveExpense() {
   const data = {
     s: "-",  // Expense
@@ -209,8 +210,9 @@ async function saveExpense() {
 
   try {
     if (bdg.fExpenseID.value === "") {
-      await addDoc(collection(db, "entries"), data);
+      const docRef = await addDoc(collection(db, "entries"), data);
       console.log("New expense added:", data);
+      console.log("Document ID:", docRef.id);
     } else {
       const expenseDocRef = doc(db, "entries", bdg.fExpenseID.value);
       await updateDoc(expenseDocRef, data);
@@ -224,7 +226,7 @@ async function saveExpense() {
   }
 }
 
-// Delete entry from Firestore
+// Delete entry from Firestore (must be async)
 async function del(id) {
   console.log(`Deleting entry with ID: ${id}`);
 
